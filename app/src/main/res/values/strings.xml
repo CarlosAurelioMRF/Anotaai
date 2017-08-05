@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Anota aí</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="openDrawer">open_drawer</string>
+    <string name="closeDrawer">close_drawer</string>
+
+    <string name="title_activity_usuarios">Usuários</string>
+    <string name="string_nome_completo">Nome Completo</string>
+    <string name="string_nome_do_usuario">Nome do Usuário</string>
+    <string name="string_senha">Senha</string>
+    <string name="string_salvar">Salvar</string>
+    <string name="action_settings">Configurações</string>
+    <string name="string_deletar">Deletar</string>
+
+    <string name="nav_home">Início</string>
+    <string name="nav_order">Pedidos</string>
+    <string name="nav_product">Produtos</string>
+    <string name="nav_box">Caixa</string>
+    <string name="nav_settings">Configurações</string>
+
+    <string-array name="nav_item_activity_titles">
+        <item>Início</item>
+        <item>Pedidos</item>
+        <item>Produtos</item>
+        <item>Caixa</item>
+        <item>Configurações</item>
+    </string-array>
+
+    <string name="activity_title_privacy_policy">Política de Privacidade</string>
+    <string name="action_clear_all">Limpar</string>
+    <string name="action_logout">Sair</string>
+    <string name="action_mark_all_read">Marcar todas como lido</string>
+    <string name="privacy_policy">Política de Privacidade</string>
+    <string name="string_utilitarios">Utilitários</string>
+    <string name="string_type_user">Tipo de Usuário</string>
+
+    <string name="string_grupos">Grupos</string>
+    <string name="string_nome_do_grupo">Nome do Grupo</string>
+    <string name="string_tipo_de_grupo">Tipo de Grupo</string>
+    <string name="string_administrador">Administrador</string>
+    <string name="strnig_caixa">Caixa</string>
+    <string name="string_garcom">Garçom</string>
+    <string name="string_alimentos">Alimentos</string>
+    <string name="string_alcoolicos">Alcoólicos</string>
+    <string name="string_nao_alcoolicos">Não Alcoólicos</string>
+    <string name="string_outros">Outros</string>
+
+    <string name="string_unidade_de_medida">Unidade de Medida</string>
+    <string name="string_descricao">Descrição</string>
+
+    <string name="string_nome_do_produto">Nome do Produto</string>
+    <string name="string_produto">Produto</string>
+    <string name="string_codigo_externo">Código Externo</string>
+    <string name="string_preco_de_venda">Preço de Venda</string>
+</resources>

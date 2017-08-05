@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#d32f2f</color>
+    <color name="colorPrimaryDark">#c72c2c</color>
+    <color name="colorAccent">#BF1E00</color>
+
+    <color name="colorDivider">#DBDBDB</color>
+    <color name="colorCinza">#A8A8A8</color>
+    <color name="colorCinzaEscuro">#616161</color>
+    <color name="colorRedDelete">#BF1E00</color>
+</resources>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="br.com.carlosaurelio.anotaai"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application
+        android:name="com.orm.SugarApp"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="DATABASE"
+            android:value="anotaai.db"/>
+        <meta-data
+            android:name="VERSION"
+            android:value="1"/>
+        <meta-data
+            android:name="QUERY_LOG"
+            android:value="true"/>
+        <meta-data
+            android:name="DOMAIN_PACKAGE_NAME"
+            android:value="br.com.carlosaurelio.anotaai.model"/>
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:label="@string/app_name"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.UsuariosActivity"
+            android:label="@string/title_activity_usuarios"/>
+        <activity
+            android:name=".activity.AddEditUsuarioActivity"
+            android:label="@string/title_activity_usuarios"/>
+        <activity
+            android:name=".activity.PrivacyPolicyActivity"
+            android:label="@string/activity_title_privacy_policy"/>
+
+        <activity
+            android:name=".activity.AddEditProdutoActivity"
+            android:label="@string/string_produto"/>
+        <activity
+            android:name=".activity.GrupoActivity"
+            android:label="@string/string_grupos"/>
+        <activity
+            android:name=".activity.AddEditGrupoActivity"
+            android:label="@string/string_grupos"/>
+        <activity
+            android:name=".activity.UnidadeMedidaActivity"
+            android:label="@string/string_unidade_de_medida" />
+        <activity
+            android:name=".activity.AddEditUnidadeMedidaActivity"
+            android:label="@string/string_unidade_de_medida"/>
+    </application>
+
+</manifest>
