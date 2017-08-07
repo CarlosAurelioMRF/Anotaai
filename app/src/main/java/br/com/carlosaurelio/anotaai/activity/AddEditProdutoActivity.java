@@ -22,6 +22,7 @@ import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.Produto;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
+import fr.ganfra.materialspinner.MaterialSpinner;
 
 public class AddEditProdutoActivity extends AppCompatActivity {
 
@@ -33,7 +34,7 @@ public class AddEditProdutoActivity extends AppCompatActivity {
     private Double precoVenda;
 
     private EditText edtNomeProduto, edtCodigoExterno, edtPrecoVenda;
-    private Spinner spnUnidadeMedida, spnGrupo;
+    private MaterialSpinner spnUnidadeMedida, spnGrupo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class AddEditProdutoActivity extends AppCompatActivity {
 
         edtNomeProduto = (EditText) findViewById(R.id.edtNomeProduto);
         edtCodigoExterno = (EditText) findViewById(R.id.edtCodigoExterno);
-        spnUnidadeMedida = (Spinner) findViewById(R.id.spnUnidadeMedida);
+        spnUnidadeMedida = (MaterialSpinner) findViewById(R.id.spnUnidadeMedida);
 //        spnGrupo = (Spinner) findViewById(R.id.spnGrupo);
         edtPrecoVenda = (EditText) findViewById(R.id.edtPrecoVenda);
 

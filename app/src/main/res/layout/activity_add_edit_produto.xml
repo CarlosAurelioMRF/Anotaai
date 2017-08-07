@@ -56,22 +56,16 @@
                     android:inputType="textPersonName"/>
             </android.support.design.widget.TextInputLayout>
 
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/lUnidadeMedida"
+            <fr.ganfra.materialspinner.MaterialSpinner
+                android:id="@+id/spnUnidadeMedida"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
-
-                <Spinner
-                    android:id="@+id/spnUnidadeMedida"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:prompt="@string/string_unidade_de_medida"
-                    android:spinnerMode="dialog">
-
-                </Spinner>
-
-            </android.support.design.widget.TextInputLayout>
+                app:ms_enableErrorLabel="true"
+                app:ms_enableFloatingLabel="true"
+                app:ms_floatingLabelText="@string/string_unidade_de_medida"
+                app:ms_hint="@string/string_unidade_de_medida"
+                app:ms_hintColor="@color/colorAccent"
+                app:ms_errorColor="@color/colorPrimaryDark"/>
 
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/lPrecoVenda"
