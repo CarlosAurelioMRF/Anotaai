@@ -1,9 +1,14 @@
 package br.com.carlosaurelio.anotaai.model;
 
-import com.orm.SugarRecord;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
-public class UnidadeMedida extends SugarRecord{
+public class UnidadeMedida extends RealmObject{
 
+    @PrimaryKey
+    private int id;
+    @Required
     private String unidadeMedida;
     private String descricao;
     private String createDate;
@@ -20,10 +25,19 @@ public class UnidadeMedida extends SugarRecord{
         this.updateDate = updateDate;
     }
 
-    public UnidadeMedida(String unidadeMedida, String descricao, String updateDate) {
+    public UnidadeMedida(int id, String unidadeMedida, String descricao, String updateDate) {
+        this.id = id;
         this.unidadeMedida = unidadeMedida;
         this.descricao = descricao;
         this.updateDate = updateDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUnidadeMedida() {

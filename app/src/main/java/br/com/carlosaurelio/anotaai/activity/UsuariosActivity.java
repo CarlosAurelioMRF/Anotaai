@@ -8,17 +8,15 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.orm.SugarContext;
-
-import java.util.List;
-
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.UsuariosAdapter;
 import br.com.carlosaurelio.anotaai.controller.UsuarioController;
 import br.com.carlosaurelio.anotaai.model.Usuario;
+import io.realm.RealmResults;
 
 public class UsuariosActivity extends AppCompatActivity {
+
+    private UsuarioController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,11 +24,11 @@ public class UsuariosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_usuarios);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SugarContext.init(getApplicationContext());
+        controller = new UsuarioController(true);
 
-        List<Usuario> mUsuarios = new UsuarioController().listarContatos();
+        RealmResults<Usuario> mUsuarios = controller.listarUsuarios();
 
-        UsuariosAdapter adapter = new UsuariosAdapter(this, mUsuarios);
+        UsuariosAdapter adapter = new UsuariosAdapter(this, mUsuarios, true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rcvUsuarios);
 
@@ -50,6 +48,12 @@ public class UsuariosActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        controller.close();
+        super.onDestroy();
     }
 
     @Override

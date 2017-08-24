@@ -1,13 +1,19 @@
 package br.com.carlosaurelio.anotaai.model;
 
-import com.orm.SugarRecord;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
-public class Produto extends SugarRecord {
+public class Produto extends RealmObject {
 
+    @PrimaryKey
+    private int id;
+    @Required
     private String nomeProduto;
     private String codigoExterno;
-    private int idUnidadeMedida;
-    private int idGrupo;
+    private UnidadeMedida unidadeMedida;
+    private GrupoProduto grupoProduto;
+    @Required
     private Double precoVenda;
     private String createDate;
     private String updateDate;
@@ -16,23 +22,31 @@ public class Produto extends SugarRecord {
 
     }
 
-    public Produto(String nomeProduto, String codigoExterno, int idUnidadeMedida, int idGrupo, Double precoVenda, String createDate, String updateDate) {
+    public Produto(String nomeProduto, String codigoExterno, UnidadeMedida unidadeMedida, GrupoProduto grupoProduto, Double precoVenda, String createDate, String updateDate) {
         this.nomeProduto = nomeProduto;
         this.codigoExterno = codigoExterno;
-        this.idUnidadeMedida = idUnidadeMedida;
-        this.idGrupo = idGrupo;
+        this.unidadeMedida = unidadeMedida;
+        this.grupoProduto = grupoProduto;
         this.precoVenda = precoVenda;
         this.createDate = createDate;
         this.updateDate = updateDate;
     }
 
-    public Produto(String nomeProduto, String codigoExterno, int idUnidadeMedida, int idGrupo, Double precoVenda, String updateDate) {
+    public Produto(String nomeProduto, String codigoExterno, UnidadeMedida unidadeMedida, GrupoProduto grupoProduto, Double precoVenda, String updateDate) {
         this.nomeProduto = nomeProduto;
         this.codigoExterno = codigoExterno;
-        this.idUnidadeMedida = idUnidadeMedida;
-        this.idGrupo = idGrupo;
+        this.unidadeMedida = unidadeMedida;
+        this.grupoProduto = grupoProduto;
         this.precoVenda = precoVenda;
         this.updateDate = updateDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNomeProduto() {
@@ -51,20 +65,20 @@ public class Produto extends SugarRecord {
         this.codigoExterno = codigoExterno;
     }
 
-    public int getIdUnidadeMedida() {
-        return idUnidadeMedida;
+    public UnidadeMedida getUnidadeMedida() {
+        return unidadeMedida;
     }
 
-    public void setIdUnidadeMedida(int idUnidadeMedida) {
-        this.idUnidadeMedida = idUnidadeMedida;
+    public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
+        this.unidadeMedida = unidadeMedida;
     }
 
-    public int getIdGrupo() {
-        return idGrupo;
+    public GrupoProduto getGrupoProduto() {
+        return grupoProduto;
     }
 
-    public void setIdGrupo(int idGrupo) {
-        this.idGrupo = idGrupo;
+    public void setGrupoProduto(GrupoProduto grupoProduto) {
+        this.grupoProduto = grupoProduto;
     }
 
     public Double getPrecoVenda() {

@@ -25,7 +25,7 @@ public class AddEditGrupoActivity extends AppCompatActivity {
     private static String TITLE_ACTIVITY;
     private EditText edtNomeGrupo;
     private RadioGroup rdgTipoGrupo;
-    private Long idGrupo;
+    private int idGrupo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ public class AddEditGrupoActivity extends AppCompatActivity {
         rdgTipoGrupo = (RadioGroup) findViewById(R.id.rdgTipoGrupo);
 
         if (TYPE_ACTIVITY == 1) {
-            idGrupo = bundle.getLong("codigoGrupo");
+            idGrupo = bundle.getInt("codigoGrupo");
             edtNomeGrupo.setText(bundle.getString("nomeGrupo"));
             rdgTipoGrupo.check(bundle.getInt("tipoGrupo"));
         }
@@ -108,12 +108,11 @@ public class AddEditGrupoActivity extends AppCompatActivity {
             edtNomeGrupo.setError("Obrigatório");
             edtNomeGrupo.requestFocus();
         } else {
-            ProdutoController controller = new ProdutoController();
+            ProdutoController controller = new ProdutoController(false);
 
             if (TYPE_ACTIVITY == 0) {
                 try {
                     GrupoProduto grupoProduto = new GrupoProduto(nome, tipo, dateNow, dateNow);
-
                     controller.inserirGrupo(grupoProduto);
                     Toast.makeText(getApplicationContext(), grupoProduto.getNomeGrupo() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -123,14 +122,8 @@ public class AddEditGrupoActivity extends AppCompatActivity {
                 }
             } else {
                 try {
-                    GrupoProduto grupoProduto = controller.buscarGrupo(idGrupo);
-
-                    grupoProduto.setNomeGrupo(nome);
-                    grupoProduto.setTipoGrupo(tipo);
-                    grupoProduto.setUpdateDate(dateNow);
-
+                    GrupoProduto grupoProduto = new GrupoProduto(idGrupo, nome, tipo, dateNow);
                     controller.atualizarGrupo(grupoProduto);
-
                     Toast.makeText(getApplicationContext(), grupoProduto.getNomeGrupo() + " editado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(this);

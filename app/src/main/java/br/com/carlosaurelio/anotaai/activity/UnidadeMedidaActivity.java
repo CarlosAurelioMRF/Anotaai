@@ -8,18 +8,16 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.orm.SugarContext;
-
-import java.util.List;
-
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.UnidadeMedidaAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
 import br.com.carlosaurelio.anotaai.other.DividerItemDecoration;
+import io.realm.RealmResults;
 
 public class UnidadeMedidaActivity extends AppCompatActivity {
+
+    private ProdutoController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +25,11 @@ public class UnidadeMedidaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_unidade_medida);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SugarContext.init(getApplicationContext());
+        controller = new ProdutoController(true);
 
-        List<UnidadeMedida> mUnidadeMedidas = new ProdutoController().listarUnidadeMedidas();
+        RealmResults<UnidadeMedida> mUnidadeMedidas = controller.listarUnidadeMedidas();
 
-        UnidadeMedidaAdapter adapter = new UnidadeMedidaAdapter(this, mUnidadeMedidas);
+        UnidadeMedidaAdapter adapter = new UnidadeMedidaAdapter(this, mUnidadeMedidas, true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rcvUnidadeMedida);
 
@@ -54,6 +52,12 @@ public class UnidadeMedidaActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        controller.close();
+        super.onDestroy();
     }
 
     @Override

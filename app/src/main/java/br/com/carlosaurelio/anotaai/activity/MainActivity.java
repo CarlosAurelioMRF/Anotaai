@@ -29,6 +29,7 @@ import br.com.carlosaurelio.anotaai.fragment.OrderFragment;
 import br.com.carlosaurelio.anotaai.fragment.ProductFragment;
 import br.com.carlosaurelio.anotaai.fragment.SettingsFragment;
 import br.com.carlosaurelio.anotaai.other.CircleTransform;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Realm.init(this);
+
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

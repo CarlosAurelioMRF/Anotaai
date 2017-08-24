@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,15 +20,14 @@ import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditUsuarioActivity;
 import br.com.carlosaurelio.anotaai.controller.UsuarioController;
 import br.com.carlosaurelio.anotaai.model.Usuario;
+import io.realm.RealmBaseAdapter;
+import io.realm.RealmRecyclerViewAdapter;
+import io.realm.RealmResults;
 
-public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.MyViewHolder> {
+public class UsuariosAdapter extends RealmRecyclerViewAdapter<Usuario, UsuariosAdapter.MyViewHolder>{
 
-    private Context mContext;
-    private List<Usuario> mUsuarioList;
-
-    public UsuariosAdapter(Context mContext, List<Usuario> usuarioList) {
-        this.mContext = mContext;
-        this.mUsuarioList = usuarioList;
+    public UsuariosAdapter(Context mContext, RealmResults<Usuario> usuarioResults,  boolean autoUpdate) {
+        super(mContext, usuarioResults, autoUpdate);
     }
 
     @Override
@@ -40,43 +40,42 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.MyView
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
-        final Usuario usuario = mUsuarioList.get(position);
+        final Usuario usuario = getItem(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, AddEditUsuarioActivity.class);
+                Intent intent = new Intent(context, AddEditUsuarioActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putLong("codigoUsuario", usuario.getId());
+                bundle.putInt("codigoUsuario", usuario.getId());
                 bundle.putString("nomeCompleto", usuario.getNomeCompleto());
                 bundle.putString("nomeUsuario", usuario.getNomeUsuario());
                 bundle.putInt("tipoUsuario", usuario.getTipoUsuario());
                 bundle.putInt("TYPE_ACTIVITY", 1);
                 bundle.putString("TITLE_ACTIVITY", "Editando usuário");
                 intent.putExtras(bundle);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
         });
 
-        holder.txtIdUsuario.setText("#" + usuario.getId().toString());
+        holder.txtIdUsuario.setText("#" + usuario.getId());
         holder.txtNomeCompleto.setText(usuario.getNomeCompleto());
         holder.txtNomeUsuario.setText(usuario.getNomeUsuario());
 
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 alert.setTitle("Alerta").setMessage("Deseja realmente deletar o usuário " + usuario.getNomeUsuario() + "?");
                 alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new UsuarioController().deletarUsuario(usuario);
-                            mUsuarioList.remove(position);
-                            notifyItemRemoved(position);
-                            Toast.makeText(mContext, usuario.getNomeCompleto() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            UsuarioController controller = new UsuarioController(false);
+                            controller.deletarUsuario(usuario);
+                            Toast.makeText(context, usuario.getNomeCompleto() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar o usuário!").create().show();
                             e.printStackTrace();
                         }
@@ -88,11 +87,6 @@ public class UsuariosAdapter extends RecyclerView.Adapter<UsuariosAdapter.MyView
                 alert.setNegativeButton("Não", null).create().show();
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mUsuarioList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

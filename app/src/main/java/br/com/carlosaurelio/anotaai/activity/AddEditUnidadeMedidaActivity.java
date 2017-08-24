@@ -23,7 +23,7 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
     private static int TYPE_ACTIVITY;
     private static String TITLE_ACTIVITY;
     private EditText edtUN, edtDescricao;
-    private Long idUN;
+    private int idUN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
         edtDescricao = (EditText) findViewById(R.id.edtDescricao);
 
         if (TYPE_ACTIVITY == 1) {
-            idUN = bundle.getLong("codigoUN");
+            idUN = bundle.getInt("codigoUN");
             edtUN.setText(bundle.getString("unidadeMedida"));
             edtDescricao.setText(bundle.getString("descricao"));
         }
@@ -113,12 +113,11 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
             edtDescricao.setError("Obrigatório");
             edtDescricao.requestFocus();
         } else {
-            ProdutoController controller = new ProdutoController();
+            ProdutoController controller = new ProdutoController(false);
 
             if (TYPE_ACTIVITY == 0) {
                 try {
                     UnidadeMedida unidadeMedida = new UnidadeMedida(un, descricao, dateNow, dateNow);
-
                     controller.inserirUnidadeMedida(unidadeMedida);
                     Toast.makeText(getApplicationContext(), unidadeMedida.getUnidadeMedida() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -128,14 +127,8 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
                 }
             } else {
                 try {
-                    UnidadeMedida unidadeMedida = controller.buscarUnidadeMedida(idUN);
-
-                    unidadeMedida.setUnidadeMedida(un);
-                    unidadeMedida.setDescricao(descricao);
-                    unidadeMedida.setUpdateDate(dateNow);
-
+                    UnidadeMedida unidadeMedida = new UnidadeMedida(idUN, un, descricao, dateNow);
                     controller.atualizarUnidadeMedida(unidadeMedida);
-
                     Toast.makeText(getApplicationContext(), unidadeMedida.getUnidadeMedida() + " editado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(this);

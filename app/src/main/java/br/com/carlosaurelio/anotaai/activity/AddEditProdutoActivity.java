@@ -28,9 +28,8 @@ public class AddEditProdutoActivity extends AppCompatActivity {
 
     private static int TYPE_ACTIVITY;
     private static String TITLE_ACTIVITY;
-    private Long idProduto;
     private String nomeProduto, codigoExterno;
-    private int codigoUN, codigoGrupo;
+    private int idProduto, codigoUN, codigoGrupo;
     private Double precoVenda;
 
     private EditText edtNomeProduto, edtCodigoExterno, edtPrecoVenda;
@@ -54,7 +53,7 @@ public class AddEditProdutoActivity extends AppCompatActivity {
 //        spnGrupo = (Spinner) findViewById(R.id.spnGrupo);
         edtPrecoVenda = (EditText) findViewById(R.id.edtPrecoVenda);
 
-        ProdutoController controller = new ProdutoController();
+        ProdutoController controller = new ProdutoController(false);
         List<UnidadeMedida> unidadeMedidas = controller.listarUnidadeMedidas();
 
         List<String> stringList = new ArrayList<>(unidadeMedidas.size());
@@ -68,7 +67,7 @@ public class AddEditProdutoActivity extends AppCompatActivity {
         spnUnidadeMedida.setAdapter(dataAdapter);
 
         if (TYPE_ACTIVITY == 1) {
-            idProduto = bundle.getLong("codigoProduto");
+            idProduto = bundle.getInt("codigoProduto");
             nomeProduto = bundle.getString("nomeProduto");
             codigoExterno = bundle.getString("codigoExterno");
             codigoUN = bundle.getInt("codigoUN");
@@ -147,14 +146,14 @@ public class AddEditProdutoActivity extends AppCompatActivity {
             edtPrecoVenda.setError("Obrigatório");
             edtPrecoVenda.requestFocus();
         } else {
-            ProdutoController controller = new ProdutoController();
+            ProdutoController controller = new ProdutoController(false);
 
             if (TYPE_ACTIVITY == 0) {
                 try {
-                    Produto produto = new Produto(nome, codigoExterno, codigoUnidadeMedida, codigoGrupo, precoVenda, dateNow, dateNow);
+//                    Produto produto = new Produto(nome, codigoExterno, codigoUnidadeMedida, codigoGrupo, precoVenda, dateNow, dateNow);
 
-                    controller.inserirProduto(produto);
-                    Toast.makeText(getApplicationContext(), produto.getNomeProduto() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
+//                    controller.inserirProduto(produto);
+//                    Toast.makeText(getApplicationContext(), produto.getNomeProduto() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(this);
                     alert.setPositiveButton("OK", null).setMessage("Não possível inserir o produto!").create().show();
@@ -162,18 +161,18 @@ public class AddEditProdutoActivity extends AppCompatActivity {
                 }
             } else {
                 try {
-                    Produto produto = controller.buscarProduto(idProduto);
-
-                    produto.setNomeProduto(nome);
-                    produto.setCodigoExterno(codigoExterno);
-                    produto.setIdUnidadeMedida(codigoUnidadeMedida);
-                    produto.setIdGrupo(codigoGrupo);
-                    produto.setPrecoVenda(precoVenda);
-                    produto.setUpdateDate(dateNow);
-
-                    controller.atualizarProduto(produto);
-
-                    Toast.makeText(getApplicationContext(), produto.getNomeProduto() + " editado com sucesso.", Toast.LENGTH_LONG).show();
+//                    Produto produto = controller.buscarProduto(idProduto);
+//
+//                    produto.setNomeProduto(nome);
+//                    produto.setCodigoExterno(codigoExterno);
+//                    produto.setIdUnidadeMedida(codigoUnidadeMedida);
+//                    produto.setIdGrupo(codigoGrupo);
+//                    produto.setPrecoVenda(precoVenda);
+//                    produto.setUpdateDate(dateNow);
+//
+//                    controller.atualizarProduto(produto);
+//
+//                    Toast.makeText(getApplicationContext(), produto.getNomeProduto() + " editado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(this);
                     alert.setPositiveButton("OK", null).setMessage("Não possível atualizar o produto!").create().show();

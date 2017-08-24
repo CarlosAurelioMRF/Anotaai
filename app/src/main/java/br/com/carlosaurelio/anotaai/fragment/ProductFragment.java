@@ -12,17 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
-import com.orm.SugarContext;
-
 import java.util.List;
-
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditProdutoActivity;
 import br.com.carlosaurelio.anotaai.adapter.ProdutoAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.Produto;
 import br.com.carlosaurelio.anotaai.other.DividerItemDecoration;
+import io.realm.RealmResults;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +40,7 @@ public class ProductFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private ProdutoController controller;
 
     public ProductFragment() {
         // Required empty public constructor
@@ -80,11 +78,11 @@ public class ProductFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_product, container, false);
 
-        SugarContext.init(getContext());
+        controller = new ProdutoController(true);
 
-        List<Produto> mProdutos = new ProdutoController().listaProdutos();
+        RealmResults<Produto> mProdutos = controller.listaProdutos();
 
-        ProdutoAdapter adapter = new ProdutoAdapter(getContext(), mProdutos);
+        ProdutoAdapter adapter = new ProdutoAdapter(getContext(), mProdutos, true);
 
         ImageView imgProduct = (ImageView) view.findViewById(R.id.imgProduct);
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.rcvProdutos);
@@ -141,6 +139,7 @@ public class ProductFragment extends Fragment {
 
     @Override
     public void onDetach() {
+        controller.close();
         super.onDetach();
         mListener = null;
     }

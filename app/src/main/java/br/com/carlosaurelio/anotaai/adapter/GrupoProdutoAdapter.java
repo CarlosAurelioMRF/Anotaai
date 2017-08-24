@@ -12,22 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
-
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditGrupoActivity;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
+import io.realm.RealmRecyclerViewAdapter;
+import io.realm.RealmResults;
 
-public class GrupoProdutoAdapter extends RecyclerView.Adapter<GrupoProdutoAdapter.MyViewHolder> {
+public class GrupoProdutoAdapter extends RealmRecyclerViewAdapter<GrupoProduto, GrupoProdutoAdapter.MyViewHolder> {
 
-    private Context mContext;
-    private List<GrupoProduto> mGrupoProdutoList;
-
-    public GrupoProdutoAdapter(Context context, List<GrupoProduto> grupoProdutoList) {
-        this.mContext = context;
-        this.mGrupoProdutoList = grupoProdutoList;
+    public GrupoProdutoAdapter(Context context, RealmResults<GrupoProduto> grupoProdtuoResults, boolean autoUpdate) {
+        super(context, grupoProdtuoResults, autoUpdate);
     }
 
     @Override
@@ -40,33 +35,33 @@ public class GrupoProdutoAdapter extends RecyclerView.Adapter<GrupoProdutoAdapte
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final GrupoProduto grupoProduto = mGrupoProdutoList.get(position);
+        final GrupoProduto grupoProduto = getItem(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, AddEditGrupoActivity.class);
+                Intent intent = new Intent(context, AddEditGrupoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putLong("codigoGrupo", grupoProduto.getId());
+                bundle.putInt("codigoGrupo", grupoProduto.getId());
                 bundle.putString("nomeGrupo", grupoProduto.getNomeGrupo());
                 bundle.putInt("tipoGrupo", grupoProduto.getTipoGrupo());
                 bundle.putInt("TYPE_ACTIVITY", 1);
                 bundle.putString("TITLE_ACTIVITY", "Editando grupo");
                 intent.putExtras(bundle);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
         });
 
-        holder.txtIdGrupo.setText("#" + grupoProduto.getId().toString());
+        holder.txtIdGrupo.setText("#" + grupoProduto.getId());
         holder.txtNomeGrupo.setText(grupoProduto.getNomeGrupo());
 
         String nomeTipo;
 
-        if (mContext.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgAlimentos")) {
+        if (context.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgAlimentos")) {
             nomeTipo = "Alimentos";
-        } else if (mContext.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgAlcoolicos")) {
+        } else if (context.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgAlcoolicos")) {
             nomeTipo = "Alcoólicos";
-        } else if (mContext.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgNaoAlcoolicos")) {
+        } else if (context.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgNaoAlcoolicos")) {
             nomeTipo = "Não Alcoólicos";
         } else {
             nomeTipo = "Outros";
@@ -77,18 +72,17 @@ public class GrupoProdutoAdapter extends RecyclerView.Adapter<GrupoProdutoAdapte
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 alert.setTitle("Alerta").setMessage("Deseja realmente deletar o grupo " + grupoProduto.getNomeGrupo() + "?");
                 alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new ProdutoController().deletarGrupo(grupoProduto);
-                            mGrupoProdutoList.remove(position);
-                            notifyItemRemoved(position);
-                            Toast.makeText(mContext, grupoProduto.getNomeGrupo() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            ProdutoController controller = new ProdutoController(false);
+                            controller.deletarGrupo(grupoProduto);
+                            Toast.makeText(context, grupoProduto.getNomeGrupo() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar o grupo!").create().show();
                             e.printStackTrace();
                         }
@@ -100,11 +94,6 @@ public class GrupoProdutoAdapter extends RecyclerView.Adapter<GrupoProdutoAdapte
                 alert.setNegativeButton("Não", null).create().show();
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mGrupoProdutoList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

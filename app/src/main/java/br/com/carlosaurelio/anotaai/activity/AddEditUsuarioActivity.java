@@ -25,7 +25,7 @@ public class AddEditUsuarioActivity extends AppCompatActivity {
     private static String TITLE_ACTIVITY;
     private EditText edtNome, edtUsuario, edtSenha;
     private RadioGroup rdgGroupUser;
-    private Long idUsuario;
+    private int idUsuario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +45,7 @@ public class AddEditUsuarioActivity extends AppCompatActivity {
         rdgGroupUser = (RadioGroup) findViewById(R.id.rdgGroupUser);
 
         if (TYPE_ACTIVITY == 1) {
-            idUsuario = bundle.getLong("codigoUsuario");
+            idUsuario = bundle.getInt("codigoUsuario");
             edtNome.setText(bundle.getString("nomeCompleto"));
             edtUsuario.setText(bundle.getString("nomeUsuario"));
             rdgGroupUser.check(bundle.getInt("tipoUsuario"));
@@ -131,13 +131,12 @@ public class AddEditUsuarioActivity extends AppCompatActivity {
             edtSenha.setError("Obrigatório");
             edtSenha.requestFocus();
         } else {
-            UsuarioController controller = new UsuarioController();
+            UsuarioController controller = new UsuarioController(false);
 
             // Inserindo
             if (TYPE_ACTIVITY == 0) {
                 try {
                     Usuario usuario = new Usuario(nome, nomeUsuario, tipoUsuario, senha, dateNow, dateNow);
-
                     controller.inserirUsuario(usuario);
                     Toast.makeText(getApplicationContext(), usuario.getNomeCompleto() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
@@ -147,16 +146,8 @@ public class AddEditUsuarioActivity extends AppCompatActivity {
                 }
             } else {
                 try {
-                    Usuario usuario = controller.buscarUsuario(idUsuario);
-
-                    usuario.setNomeCompleto(nome);
-                    usuario.setNomeUsuario(nomeUsuario);
-                    usuario.setTipoUsuario(tipoUsuario);
-                    usuario.setSenhaUsuario(senha);
-                    usuario.setUpdateDate(dateNow);
-
+                    Usuario usuario = new Usuario(idUsuario, nome, nomeUsuario, tipoUsuario, senha, dateNow);
                     controller.atualizarUsuario(usuario);
-
                     Toast.makeText(getApplicationContext(), usuario.getNomeCompleto() + " editado com sucesso.", Toast.LENGTH_LONG).show();
                 } catch (Exception e) {
                     AlertDialog.Builder alert = new AlertDialog.Builder(this);

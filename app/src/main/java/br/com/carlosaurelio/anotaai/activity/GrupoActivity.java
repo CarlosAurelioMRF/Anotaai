@@ -8,18 +8,17 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-
-import com.orm.SugarContext;
-
 import java.util.List;
-
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.GrupoProdutoAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
 import br.com.carlosaurelio.anotaai.other.DividerItemDecoration;
+import io.realm.RealmResults;
 
 public class GrupoActivity extends AppCompatActivity {
+
+    private ProdutoController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +26,11 @@ public class GrupoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_grupo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        SugarContext.init(getApplicationContext());
+        controller = new ProdutoController(true);
 
-        List<GrupoProduto> mGrupoProduto = new ProdutoController().listarGrupos();
+        RealmResults<GrupoProduto> mGrupoProduto = controller.listarGrupos();
 
-        GrupoProdutoAdapter adapter = new GrupoProdutoAdapter(this, mGrupoProduto);
+        GrupoProdutoAdapter adapter = new GrupoProdutoAdapter(this, mGrupoProduto, true);
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rcvGrupo);
 
@@ -54,6 +53,12 @@ public class GrupoActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        controller.close();
+        super.onDestroy();
     }
 
     @Override

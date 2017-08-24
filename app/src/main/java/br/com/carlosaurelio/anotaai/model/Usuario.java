@@ -1,12 +1,19 @@
 package br.com.carlosaurelio.anotaai.model;
 
-import com.orm.SugarRecord;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
-public class Usuario extends SugarRecord {
+public class Usuario extends RealmObject {
 
+    @PrimaryKey
+    private int id;
+    @Required
     private String nomeCompleto;
+    @Required
     private String nomeUsuario;
     private int tipoUsuario;
+    @Required
     private String senhaUsuario;
     private String createDate;
     private String updateDate;
@@ -24,12 +31,21 @@ public class Usuario extends SugarRecord {
         this.updateDate = updateDate;
     }
 
-    public Usuario(String nomeCompleto, String nomeUsuario, int tipoUsuario, String senhaUsuario, String updateDate) {
+    public Usuario(int id, String nomeCompleto, String nomeUsuario, int tipoUsuario, String senhaUsuario, String updateDate) {
+        this.id = id;
         this.nomeCompleto = nomeCompleto;
         this.nomeUsuario = nomeUsuario;
         this.tipoUsuario = tipoUsuario;
         this.senhaUsuario = senhaUsuario;
         this.updateDate = updateDate;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNomeCompleto() {

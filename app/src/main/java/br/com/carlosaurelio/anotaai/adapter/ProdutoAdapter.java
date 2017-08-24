@@ -12,22 +12,17 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
-
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditProdutoActivity;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.Produto;
+import io.realm.RealmRecyclerViewAdapter;
+import io.realm.RealmResults;
 
-public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.MyViewHolder> {
+public class ProdutoAdapter extends RealmRecyclerViewAdapter<Produto, ProdutoAdapter.MyViewHolder> {
 
-    private Context mContext;
-    private List<Produto> mProdutoList;
-
-    public ProdutoAdapter(Context context, List<Produto> produtoList) {
-        this.mContext = context;
-        this.mProdutoList = produtoList;
+    public ProdutoAdapter(Context context, RealmResults<Produto> produtoResults, boolean autoUpdate) {
+        super(context, produtoResults, autoUpdate);
     }
 
     @Override
@@ -40,44 +35,43 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final Produto produto = mProdutoList.get(position);
+        final Produto produto = getItem(position);
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, AddEditProdutoActivity.class);
+                Intent intent = new Intent(context, AddEditProdutoActivity.class);
                 Bundle bundle = new Bundle();
-                bundle.putLong("codigoProduto", produto.getId());
+                bundle.putInt("codigoProduto", produto.getId());
                 bundle.putString("nomeProduto", produto.getNomeProduto());
                 bundle.putString("codigoExterno", produto.getCodigoExterno());
-                bundle.putInt("codigoUN", produto.getIdUnidadeMedida());
-                bundle.putInt("codigoGrupo", produto.getIdGrupo());
+                bundle.putInt("codigoUN", produto.getUnidadeMedida().getId());
+                bundle.putInt("codigoGrupo", produto.getGrupoProduto().getId());
                 bundle.putDouble("precoVenda", produto.getPrecoVenda());
                 bundle.putInt("TYPE_ACTIVITY", 1);
                 bundle.putString("TITLE_ACTIVITY", "Editando produto");
                 intent.putExtras(bundle);
-                mContext.startActivity(intent);
+                context.startActivity(intent);
             }
         });
 
-        holder.txtIdProduto.setText("#" + produto.getId().toString());
+        holder.txtIdProduto.setText("#" + produto.getId());
         holder.txtNomeProduto.setText(produto.getNomeProduto());
 
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 alert.setTitle("Alerta").setMessage("Deseja realmente deletar o produto " + produto.getNomeProduto() + "?");
                 alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int which) {
                         try {
-                            new ProdutoController().deletarProduto(produto);
-                            mProdutoList.remove(position);
-                            notifyItemRemoved(position);
-                            Toast.makeText(mContext, produto.getNomeProduto() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            ProdutoController controller = new ProdutoController(false);
+                            controller.deletarProduto(produto);
+                            Toast.makeText(context, produto.getNomeProduto() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar o produto!").create().show();
                             e.printStackTrace();
                         }
@@ -89,11 +83,6 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.MyViewHo
                 alert.setNegativeButton("Não", null).create().show();
             }
         });
-    }
-
-    @Override
-    public int getItemCount() {
-        return mProdutoList.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

@@ -1,34 +1,65 @@
 package br.com.carlosaurelio.anotaai.controller;
 
-import java.util.List;
-
 import br.com.carlosaurelio.anotaai.model.Usuario;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 
 public class UsuarioController {
 
-    public List<Usuario> listarContatos() {
-        return Usuario.listAll(Usuario.class);
+    private Realm realm;
+
+    public UsuarioController(boolean newInstance) {
+        RealmConfiguration config = new RealmConfiguration.Builder().build();
+
+        realm = newInstance ? Realm.getDefaultInstance() : Realm.getInstance(config);
+    }
+
+    public RealmResults<Usuario> listarUsuarios() {
+        return realm.where(Usuario.class).findAll();
     }
 
     public void deletarUsuario(Usuario usuario) {
-        usuario.delete();
+        startTransaction();
+        usuario.deleteFromRealm();
+        commitTransaction();
+        close();
     }
 
     public void inserirUsuario(Usuario usuario) {
-        usuario.save();
-    }
+        startTransaction();
 
-    public Usuario buscarUsuario(long id) {
-        return Usuario.findById(Usuario.class, id);
+        if (realm.where(Usuario.class).max("id") == null)
+            usuario.setId(1);
+        else
+            usuario.setId(realm.where(Usuario.class).max("id").intValue() + 1);
+
+        Usuario realmUsuario = realm.copyToRealm(usuario);
+
+        commitTransaction();
+        close();
     }
 
     public void atualizarUsuario(Usuario usuario) {
-        usuario.save();
+        startTransaction();
+        Usuario usuarioBanco = realm.where(Usuario.class).equalTo("id", usuario.getId()).findFirst();
+        usuario.setCreateDate(usuarioBanco.getCreateDate());
+
+        Usuario realmUsuario = realm.copyToRealmOrUpdate(usuario);
+        commitTransaction();
+        close();
     }
 
-    public Usuario buscarUsuario(String nomeUsuario) {
-        List<Usuario> usuarios = Usuario.find(Usuario.class, "nomeUsuario = ?", nomeUsuario);
-        return usuarios.get(0);
+    private void commitTransaction() {
+        realm.commitTransaction();
+    }
+
+    private void startTransaction(){
+        realm.beginTransaction();
+    }
+
+    public void close(){
+        realm.close();
     }
 
 }
