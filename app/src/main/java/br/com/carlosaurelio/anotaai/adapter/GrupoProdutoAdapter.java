@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.com.carlosaurelio.anotaai.R;
@@ -79,8 +79,9 @@ public class GrupoProdutoAdapter extends RealmRecyclerViewAdapter<GrupoProduto, 
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             ProdutoController controller = new ProdutoController(false);
+                            String mNomeGrupo = grupoProduto.getNomeGrupo();
                             controller.deletarGrupo(grupoProduto);
-                            Toast.makeText(context, grupoProduto.getNomeGrupo() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, mNomeGrupo + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar o grupo!").create().show();
@@ -98,14 +99,14 @@ public class GrupoProdutoAdapter extends RealmRecyclerViewAdapter<GrupoProduto, 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txtIdGrupo, txtNomeGrupo, txtTipo;
-        public ImageButton btnDeletar;
+        public Button btnDeletar;
 
         public MyViewHolder(View view) {
             super(view);
             txtIdGrupo = (TextView) view.findViewById(R.id.txtIdGrupo);
             txtNomeGrupo = (TextView) view.findViewById(R.id.txtNomeGrupo);
             txtTipo = (TextView) view.findViewById(R.id.txtTipoGrupo);
-            btnDeletar = (ImageButton) view.findViewById(R.id.btnDeletarGrupo);
+            btnDeletar = (Button) view.findViewById(R.id.btnDeletarGrupo);
         }
     }
 }

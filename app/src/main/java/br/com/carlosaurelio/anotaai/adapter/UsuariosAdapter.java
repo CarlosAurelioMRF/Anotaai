@@ -72,8 +72,9 @@ public class UsuariosAdapter extends RealmRecyclerViewAdapter<Usuario, UsuariosA
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             UsuarioController controller = new UsuarioController(false);
+                            String mNomeCompleto = usuario.getNomeCompleto();
                             controller.deletarUsuario(usuario);
-                            Toast.makeText(context, usuario.getNomeCompleto() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, mNomeCompleto + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar o usuário!").create().show();

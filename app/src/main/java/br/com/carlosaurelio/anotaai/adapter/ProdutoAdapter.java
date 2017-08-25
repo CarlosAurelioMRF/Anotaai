@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.com.carlosaurelio.anotaai.R;
@@ -68,8 +68,9 @@ public class ProdutoAdapter extends RealmRecyclerViewAdapter<Produto, ProdutoAda
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             ProdutoController controller = new ProdutoController(false);
+                            String mNomeProduto = produto.getNomeProduto();
                             controller.deletarProduto(produto);
-                            Toast.makeText(context, produto.getNomeProduto() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, mNomeProduto + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar o produto!").create().show();
@@ -87,13 +88,13 @@ public class ProdutoAdapter extends RealmRecyclerViewAdapter<Produto, ProdutoAda
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txtIdProduto, txtNomeProduto;
-        public ImageButton btnDeletar;
+        public Button btnDeletar;
 
         public MyViewHolder(View view) {
             super(view);
             txtIdProduto = (TextView) view.findViewById(R.id.txtIdProduto);
             txtNomeProduto = (TextView) view.findViewById(R.id.txtNomeProduto);
-            btnDeletar = (ImageButton) view.findViewById(R.id.btnDeletarProduto);
+            btnDeletar = (Button) view.findViewById(R.id.btnDeletarProduto);
         }
     }
 }

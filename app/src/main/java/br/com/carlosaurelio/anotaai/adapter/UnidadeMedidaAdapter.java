@@ -9,7 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import br.com.carlosaurelio.anotaai.R;
@@ -66,8 +66,9 @@ public class UnidadeMedidaAdapter extends RealmRecyclerViewAdapter<UnidadeMedida
                     public void onClick(DialogInterface dialog, int which) {
                         try {
                             ProdutoController controller = new ProdutoController(false);
+                            String mUnidadeMedida = unidadeMedida.getUnidadeMedida();
                             controller.deletarUnidadeMedida(unidadeMedida);
-                            Toast.makeText(context, unidadeMedida.getUnidadeMedida() + " deletado com sucesso.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, mUnidadeMedida + " deletado com sucesso.", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             AlertDialog.Builder alert = new AlertDialog.Builder(context);
                             alert.setPositiveButton("OK", null).setMessage("Não possível deletar a unidade medida!").create().show();
@@ -85,14 +86,14 @@ public class UnidadeMedidaAdapter extends RealmRecyclerViewAdapter<UnidadeMedida
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView txtIdUN, txtUN, txtDescricao;
-        public ImageButton btnDeletar;
+        public Button btnDeletar;
 
         public MyViewHolder(View view) {
             super(view);
             txtIdUN = (TextView) view.findViewById(R.id.txtIdUN);
             txtUN = (TextView) view.findViewById(R.id.txtUN);
             txtDescricao = (TextView) view.findViewById(R.id.txtDescricao);
-            btnDeletar = (ImageButton) view.findViewById(R.id.btnDeletarUnidadeMedida);
+            btnDeletar = (Button) view.findViewById(R.id.btnDeletarUnidadeMedida);
         }
     }
 }

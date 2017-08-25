@@ -96,9 +96,6 @@ public class ProductFragment extends Fragment {
             recyclerView.setVisibility(View.VISIBLE);
         }
 
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(), R.drawable.divider));
-
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);

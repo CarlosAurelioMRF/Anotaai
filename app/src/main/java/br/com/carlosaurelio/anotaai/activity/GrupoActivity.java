@@ -34,9 +34,6 @@ public class GrupoActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rcvGrupo);
 
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(this, R.drawable.divider));
-
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 1);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setAdapter(adapter);
