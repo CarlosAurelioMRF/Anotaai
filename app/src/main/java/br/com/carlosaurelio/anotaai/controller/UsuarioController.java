@@ -34,6 +34,8 @@ public class UsuarioController {
         else
             usuario.setId(realm.where(Usuario.class).max("id").intValue() + 1);
 
+        usuario.setCreateDate(usuario.getUpdateDate());
+
         Usuario realmUsuario = realm.copyToRealm(usuario);
 
         commitTransaction();

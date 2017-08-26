@@ -41,10 +41,7 @@ public class UsuariosActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication().getApplicationContext(), AddEditUsuarioActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("TYPE_ACTIVITY", 0);
-                bundle.putString("TITLE_ACTIVITY", "Novo usuário");
-                intent.putExtras(bundle);
+                intent.putExtra("TYPE_ACTIVITY", 0);
                 startActivity(intent);
             }
         });

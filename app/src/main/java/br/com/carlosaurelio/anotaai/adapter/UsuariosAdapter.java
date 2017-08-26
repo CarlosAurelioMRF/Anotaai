@@ -3,24 +3,18 @@ package br.com.carlosaurelio.anotaai.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
 
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditUsuarioActivity;
 import br.com.carlosaurelio.anotaai.controller.UsuarioController;
 import br.com.carlosaurelio.anotaai.model.Usuario;
-import io.realm.RealmBaseAdapter;
+import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 import io.realm.RealmRecyclerViewAdapter;
 import io.realm.RealmResults;
 
@@ -46,14 +40,11 @@ public class UsuariosAdapter extends RealmRecyclerViewAdapter<Usuario, UsuariosA
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AddEditUsuarioActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("codigoUsuario", usuario.getId());
-                bundle.putString("nomeCompleto", usuario.getNomeCompleto());
-                bundle.putString("nomeUsuario", usuario.getNomeUsuario());
-                bundle.putInt("tipoUsuario", usuario.getTipoUsuario());
-                bundle.putInt("TYPE_ACTIVITY", 1);
-                bundle.putString("TITLE_ACTIVITY", "Editando usuário");
-                intent.putExtras(bundle);
+                intent.putExtra("codigoUsuario", usuario.getId());
+                intent.putExtra("nomeCompleto", usuario.getNomeCompleto());
+                intent.putExtra("nomeUsuario", usuario.getNomeUsuario());
+                intent.putExtra("tipoUsuario", usuario.getTipoUsuario());
+                intent.putExtra("TYPE_ACTIVITY", 1);
                 context.startActivity(intent);
             }
         });
@@ -65,27 +56,24 @@ public class UsuariosAdapter extends RealmRecyclerViewAdapter<Usuario, UsuariosA
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                alert.setTitle("Alerta").setMessage("Deseja realmente deletar o usuário " + usuario.getNomeUsuario() + "?");
-                alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            UsuarioController controller = new UsuarioController(false);
-                            String mNomeCompleto = usuario.getNomeCompleto();
-                            controller.deletarUsuario(usuario);
-                            Toast.makeText(context, mNomeCompleto + " deletado com sucesso.", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                            alert.setPositiveButton("OK", null).setMessage("Não possível deletar o usuário!").create().show();
-                            e.printStackTrace();
-                        }
-
-                        dialog.cancel();
-                    }
-                });
-
-                alert.setNegativeButton("Não", null).create().show();
+                new MsgFunctions().questionMessage(context, context.getString(R.string.title_activity_usuarios),
+                        context.getString(R.string.question_delete),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {
+                                    UsuarioController controller = new UsuarioController(false);
+                                    String mNomeCompleto = usuario.getNomeCompleto();
+                                    controller.deletarUsuario(usuario);
+                                    new MsgFunctions().toastDelete(context, mNomeCompleto);
+                                } catch (Exception e) {
+                                    new MsgFunctions().errorMessage(context,
+                                            context.getString(R.string.title_activity_usuarios),
+                                            context.getString(R.string.error_delete));
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
             }
         });
     }

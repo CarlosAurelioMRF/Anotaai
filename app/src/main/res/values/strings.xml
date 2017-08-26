@@ -54,4 +54,16 @@
     <string name="string_produto">Produto</string>
     <string name="string_codigo_externo">Código Externo</string>
     <string name="string_preco_de_venda">Preço de Venda</string>
+
+    <string name="error_save">Não foi possível salvar</string>
+    <string name="error_delete">Não foi possível deletar</string>
+    <string name="success_save">salvo com sucesso</string>
+    <string name="success_delete">deletado com sucesso</string>
+    <string name="dont_save_data">Alterações não foram salvas deseja sair assim mesmo?</string>
+    <string name="positive_message">Sim</string>
+    <string name="negative_message">Não</string>
+    <string name="required">Obrigatório</string>
+    <string name="insert">Inserir</string>
+    <string name="edit">Editar</string>
+    <string name="question_delete">Tem certeza que deseja realmente deletar?</string>
 </resources>

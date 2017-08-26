@@ -12,7 +12,6 @@ import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.UnidadeMedidaAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
-import br.com.carlosaurelio.anotaai.other.DividerItemDecoration;
 import io.realm.RealmResults;
 
 public class UnidadeMedidaActivity extends AppCompatActivity {
@@ -42,10 +41,7 @@ public class UnidadeMedidaActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication().getApplicationContext(), AddEditUnidadeMedidaActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("TYPE_ACTIVITY", 0);
-                bundle.putString("TITLE_ACTIVITY", "Nova unidade medida");
-                intent.putExtras(bundle);
+                intent.putExtra("TYPE_ACTIVITY", 0);
                 startActivity(intent);
             }
         });

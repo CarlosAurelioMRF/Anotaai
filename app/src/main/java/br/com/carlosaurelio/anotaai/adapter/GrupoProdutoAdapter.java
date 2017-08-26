@@ -3,19 +3,18 @@ package br.com.carlosaurelio.anotaai.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditGrupoActivity;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
+import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 import io.realm.RealmRecyclerViewAdapter;
 import io.realm.RealmResults;
 
@@ -41,13 +40,10 @@ public class GrupoProdutoAdapter extends RealmRecyclerViewAdapter<GrupoProduto, 
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AddEditGrupoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("codigoGrupo", grupoProduto.getId());
-                bundle.putString("nomeGrupo", grupoProduto.getNomeGrupo());
-                bundle.putInt("tipoGrupo", grupoProduto.getTipoGrupo());
-                bundle.putInt("TYPE_ACTIVITY", 1);
-                bundle.putString("TITLE_ACTIVITY", "Editando grupo");
-                intent.putExtras(bundle);
+                intent.putExtra("codigoGrupo", grupoProduto.getId());
+                intent.putExtra("nomeGrupo", grupoProduto.getNomeGrupo());
+                intent.putExtra("tipoGrupo", grupoProduto.getTipoGrupo());
+                intent.putExtra("TYPE_ACTIVITY", 1);
                 context.startActivity(intent);
             }
         });
@@ -72,27 +68,24 @@ public class GrupoProdutoAdapter extends RealmRecyclerViewAdapter<GrupoProduto, 
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                alert.setTitle("Alerta").setMessage("Deseja realmente deletar o grupo " + grupoProduto.getNomeGrupo() + "?");
-                alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            ProdutoController controller = new ProdutoController(false);
-                            String mNomeGrupo = grupoProduto.getNomeGrupo();
-                            controller.deletarGrupo(grupoProduto);
-                            Toast.makeText(context, mNomeGrupo + " deletado com sucesso.", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                            alert.setPositiveButton("OK", null).setMessage("Não possível deletar o grupo!").create().show();
-                            e.printStackTrace();
-                        }
-
-                        dialog.cancel();
-                    }
-                });
-
-                alert.setNegativeButton("Não", null).create().show();
+                new MsgFunctions().questionMessage(context, context.getString(R.string.string_grupos),
+                        context.getString(R.string.question_delete),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {
+                                    ProdutoController controller = new ProdutoController(false);
+                                    String mNomeGrupo = grupoProduto.getNomeGrupo();
+                                    controller.deletarGrupo(grupoProduto);
+                                    new MsgFunctions().toastDelete(context, mNomeGrupo);
+                                } catch (Exception e) {
+                                    new MsgFunctions().errorMessage(context,
+                                            context.getString(R.string.string_grupos),
+                                            context.getString(R.string.error_delete));
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
             }
         });
     }

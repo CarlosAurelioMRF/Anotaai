@@ -8,12 +8,10 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
-import java.util.List;
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.GrupoProdutoAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
-import br.com.carlosaurelio.anotaai.other.DividerItemDecoration;
 import io.realm.RealmResults;
 
 public class GrupoActivity extends AppCompatActivity {
@@ -43,10 +41,7 @@ public class GrupoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplication().getApplicationContext(), AddEditGrupoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("TYPE_ACTIVITY", 0);
-                bundle.putString("TITLE_ACTIVITY", "Novo grupo");
-                intent.putExtras(bundle);
+                intent.putExtra("TYPE_ACTIVITY", 0);
                 startActivity(intent);
             }
         });

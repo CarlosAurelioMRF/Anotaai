@@ -35,6 +35,8 @@ public class ProdutoController {
         else
             grupoProduto.setId(realm.where(GrupoProduto.class).max("id").intValue() + 1);
 
+        grupoProduto.setCreateDate(grupoProduto.getUpdateDate());
+
         GrupoProduto realmGP = realm.copyToRealm(grupoProduto);
 
         commitTransaction();
@@ -71,6 +73,8 @@ public class ProdutoController {
             unidadeMedida.setId(1);
         else
             unidadeMedida.setId(realm.where(UnidadeMedida.class).max("id").intValue() + 1);
+
+        unidadeMedida.setCreateDate(unidadeMedida.getUpdateDate());
 
         UnidadeMedida realmUN = realm.copyToRealm(unidadeMedida);
 

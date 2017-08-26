@@ -3,19 +3,17 @@ package br.com.carlosaurelio.anotaai.adapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.activity.AddEditUnidadeMedidaActivity;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
+import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 import io.realm.RealmRecyclerViewAdapter;
 import io.realm.RealmResults;
 
@@ -41,13 +39,10 @@ public class UnidadeMedidaAdapter extends RealmRecyclerViewAdapter<UnidadeMedida
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, AddEditUnidadeMedidaActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("codigoUN", unidadeMedida.getId());
-                bundle.putString("unidadeMedida", unidadeMedida.getUnidadeMedida());
-                bundle.putString("descricao", unidadeMedida.getDescricao());
-                bundle.putInt("TYPE_ACTIVITY", 1);
-                bundle.putString("TITLE_ACTIVITY", "Editando unidade medida");
-                intent.putExtras(bundle);
+                intent.putExtra("codigoUN", unidadeMedida.getId());
+                intent.putExtra("unidadeMedida", unidadeMedida.getUnidadeMedida());
+                intent.putExtra("descricao", unidadeMedida.getDescricao());
+                intent.putExtra("TYPE_ACTIVITY", 1);
                 context.startActivity(intent);
             }
         });
@@ -59,27 +54,24 @@ public class UnidadeMedidaAdapter extends RealmRecyclerViewAdapter<UnidadeMedida
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                alert.setTitle("Alerta").setMessage("Deseja realmente deletar a unidade medida " + unidadeMedida.getUnidadeMedida() + "?");
-                alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        try {
-                            ProdutoController controller = new ProdutoController(false);
-                            String mUnidadeMedida = unidadeMedida.getUnidadeMedida();
-                            controller.deletarUnidadeMedida(unidadeMedida);
-                            Toast.makeText(context, mUnidadeMedida + " deletado com sucesso.", Toast.LENGTH_LONG).show();
-                        } catch (Exception e) {
-                            AlertDialog.Builder alert = new AlertDialog.Builder(context);
-                            alert.setPositiveButton("OK", null).setMessage("Não possível deletar a unidade medida!").create().show();
-                            e.printStackTrace();
-                        }
-
-                        dialog.cancel();
-                    }
-                });
-
-                alert.setNegativeButton("Não", null).create().show();
+                new MsgFunctions().questionMessage(context, context.getString(R.string.string_unidade_de_medida),
+                        context.getString(R.string.question_delete),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                try {
+                                    ProdutoController controller = new ProdutoController(false);
+                                    String mUnidadeMedida = unidadeMedida.getUnidadeMedida();
+                                    controller.deletarUnidadeMedida(unidadeMedida);
+                                    new MsgFunctions().toastDelete(context, mUnidadeMedida);
+                                } catch (Exception e) {
+                                    new MsgFunctions().errorMessage(context,
+                                            context.getString(R.string.string_unidade_de_medida),
+                                            context.getString(R.string.error_delete));
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
             }
         });
     }

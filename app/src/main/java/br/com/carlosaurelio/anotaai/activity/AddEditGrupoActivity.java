@@ -4,28 +4,25 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.RadioGroup;
-import android.widget.Toast;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
+import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 
 public class AddEditGrupoActivity extends AppCompatActivity {
 
     private static int TYPE_ACTIVITY;
-    private static String TITLE_ACTIVITY;
     private EditText edtNomeGrupo;
     private RadioGroup rdgTipoGrupo;
-    private int idGrupo;
+    private int idGrupo = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,19 +30,20 @@ public class AddEditGrupoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit_grupo);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        TYPE_ACTIVITY = bundle.getInt("TYPE_ACTIVITY");
-        TITLE_ACTIVITY = bundle.getString("TITLE_ACTIVITY");
-        getSupportActionBar().setTitle(TITLE_ACTIVITY);
-
         edtNomeGrupo = (EditText) findViewById(R.id.edtNomeGrupo);
         rdgTipoGrupo = (RadioGroup) findViewById(R.id.rdgTipoGrupo);
 
-        if (TYPE_ACTIVITY == 1) {
-            idGrupo = bundle.getInt("codigoGrupo");
-            edtNomeGrupo.setText(bundle.getString("nomeGrupo"));
-            rdgTipoGrupo.check(bundle.getInt("tipoGrupo"));
+        TYPE_ACTIVITY = getIntent().getIntExtra("TYPE_ACTIVITY", 0);
+
+        switch (TYPE_ACTIVITY) {
+            case 0:
+                getSupportActionBar().setTitle(getString(R.string.insert));
+            case 1:
+                getSupportActionBar().setTitle(getString(R.string.edit));
+
+                idGrupo = getIntent().getIntExtra("codigoGrupo", 0);
+                edtNomeGrupo.setText(getIntent().getStringExtra("nomeGrupo"));
+                rdgTipoGrupo.check(getIntent().getIntExtra("tipoGrupo", 0));
         }
     }
 
@@ -72,18 +70,14 @@ public class AddEditGrupoActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (someDataEntered()) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Alerta").setMessage("Alterações não foram salvas deseja sair assim mesmo?");
-            alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    supportFinishAfterTransition();
-                    dialog.cancel();
-                }
-            });
-
-            alert.setNegativeButton("Não", null).create().show();
-
+            new MsgFunctions().questionMessage(this, getString(R.string.string_grupos),
+                    getString(R.string.dont_save_data),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            supportFinishAfterTransition();
+                        }
+                    });
         } else {
             super.onBackPressed();
         }
@@ -105,31 +99,25 @@ public class AddEditGrupoActivity extends AppCompatActivity {
             TextInputLayout lNomeLayout = (TextInputLayout) findViewById(R.id.lNomeLayout);
             lNomeLayout.setErrorEnabled(true);
             lNomeLayout.setError("Preencha o campo nome.");
-            edtNomeGrupo.setError("Obrigatório");
+            edtNomeGrupo.setError(getString(R.string.required));
             edtNomeGrupo.requestFocus();
         } else {
             ProdutoController controller = new ProdutoController(false);
 
-            if (TYPE_ACTIVITY == 0) {
-                try {
-                    GrupoProduto grupoProduto = new GrupoProduto(nome, tipo, dateNow, dateNow);
+            try {
+                GrupoProduto grupoProduto = new GrupoProduto(idGrupo, nome, tipo, dateNow);
+
+                if (TYPE_ACTIVITY == 0)
                     controller.inserirGrupo(grupoProduto);
-                    Toast.makeText(getApplicationContext(), grupoProduto.getNomeGrupo() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setPositiveButton("OK", null).setMessage("Não possível inserir o grupo!").create().show();
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    GrupoProduto grupoProduto = new GrupoProduto(idGrupo, nome, tipo, dateNow);
+                else
                     controller.atualizarGrupo(grupoProduto);
-                    Toast.makeText(getApplicationContext(), grupoProduto.getNomeGrupo() + " editado com sucesso.", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setPositiveButton("OK", null).setMessage("Não possível atualizar o grupo!").create().show();
-                    e.printStackTrace();
-                }
+
+                new MsgFunctions().toastSave(this, grupoProduto.getNomeGrupo());
+            } catch (Exception e) {
+                new MsgFunctions().errorMessage(this,
+                        getString(R.string.string_grupos),
+                        getString(R.string.error_save));
+                e.printStackTrace();
             }
 
             Intent intent = new Intent(AddEditGrupoActivity.this, GrupoActivity.class);

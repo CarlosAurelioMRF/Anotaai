@@ -4,12 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -17,13 +15,13 @@ import java.util.Calendar;
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
+import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 
 public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
 
     private static int TYPE_ACTIVITY;
-    private static String TITLE_ACTIVITY;
     private EditText edtUN, edtDescricao;
-    private int idUN;
+    private int idUN = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +29,20 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit_unidade_medida);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        TYPE_ACTIVITY = bundle.getInt("TYPE_ACTIVITY");
-        TITLE_ACTIVITY = bundle.getString("TITLE_ACTIVITY");
-        getSupportActionBar().setTitle(TITLE_ACTIVITY);
-
         edtUN = (EditText) findViewById(R.id.edtUN);
         edtDescricao = (EditText) findViewById(R.id.edtDescricao);
 
-        if (TYPE_ACTIVITY == 1) {
-            idUN = bundle.getInt("codigoUN");
-            edtUN.setText(bundle.getString("unidadeMedida"));
-            edtDescricao.setText(bundle.getString("descricao"));
+        TYPE_ACTIVITY = getIntent().getIntExtra("TYPE_ACTIVITY", 0);
+
+        switch (TYPE_ACTIVITY) {
+            case 0:
+                getSupportActionBar().setTitle(getString(R.string.insert));
+            case 1:
+                getSupportActionBar().setTitle(getString(R.string.edit));
+
+                idUN = getIntent().getIntExtra("codigoUN", 0);
+                edtUN.setText(getIntent().getStringExtra("unidadeMedida"));
+                edtDescricao.setText(getIntent().getStringExtra("descricao"));
         }
     }
 
@@ -71,18 +70,14 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         if (someDataEntered()) {
-            AlertDialog.Builder alert = new AlertDialog.Builder(this);
-            alert.setTitle("Alerta").setMessage("Alterações não foram salvas deseja sair assim mesmo?");
-            alert.setPositiveButton("Sim", new DialogInterface.OnClickListener() {
-
-                public void onClick(DialogInterface dialog, int which) {
-                    supportFinishAfterTransition();
-                    dialog.cancel();
-                }
-            });
-
-            alert.setNegativeButton("Não", null).create().show();
-
+            new MsgFunctions().questionMessage(this, getString(R.string.string_unidade_de_medida),
+                    getString(R.string.dont_save_data),
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            supportFinishAfterTransition();
+                        }
+                    });
         } else {
             super.onBackPressed();
         }
@@ -104,37 +99,31 @@ public class AddEditUnidadeMedidaActivity extends AppCompatActivity {
             TextInputLayout lUnidadeMedida = (TextInputLayout) findViewById(R.id.lUnidadeMedida);
             lUnidadeMedida.setErrorEnabled(true);
             lUnidadeMedida.setError("Preencha o campo unidade medida.");
-            edtUN.setError("Obrigatório");
+            edtUN.setError(getString(R.string.required));
             edtUN.requestFocus();
         } else if (descricao.equals("")) {
             TextInputLayout lDescricao = (TextInputLayout) findViewById(R.id.lDescricao);
             lDescricao.setErrorEnabled(true);
             lDescricao.setError("Preencha o campo descrição.");
-            edtDescricao.setError("Obrigatório");
+            edtDescricao.setError(getString(R.string.required));
             edtDescricao.requestFocus();
         } else {
             ProdutoController controller = new ProdutoController(false);
 
-            if (TYPE_ACTIVITY == 0) {
-                try {
-                    UnidadeMedida unidadeMedida = new UnidadeMedida(un, descricao, dateNow, dateNow);
+            try {
+                UnidadeMedida unidadeMedida = new UnidadeMedida(idUN, un, descricao, dateNow);
+
+                if (TYPE_ACTIVITY == 0)
                     controller.inserirUnidadeMedida(unidadeMedida);
-                    Toast.makeText(getApplicationContext(), unidadeMedida.getUnidadeMedida() + " cadastrado com sucesso.", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setPositiveButton("OK", null).setMessage("Não possível inserir a unidade medida!").create().show();
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    UnidadeMedida unidadeMedida = new UnidadeMedida(idUN, un, descricao, dateNow);
+                else
                     controller.atualizarUnidadeMedida(unidadeMedida);
-                    Toast.makeText(getApplicationContext(), unidadeMedida.getUnidadeMedida() + " editado com sucesso.", Toast.LENGTH_LONG).show();
-                } catch (Exception e) {
-                    AlertDialog.Builder alert = new AlertDialog.Builder(this);
-                    alert.setPositiveButton("OK", null).setMessage("Não possível atualizar a unidade medida!").create().show();
-                    e.printStackTrace();
-                }
+
+                new MsgFunctions().toastSave(this, unidadeMedida.getUnidadeMedida());
+            } catch (Exception e) {
+                new MsgFunctions().errorMessage(this,
+                        getString(R.string.string_unidade_de_medida),
+                        getString(R.string.error_save));
+                e.printStackTrace();
             }
 
             Intent intent = new Intent(AddEditUnidadeMedidaActivity.this, UnidadeMedidaActivity.class);
