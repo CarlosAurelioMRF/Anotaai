@@ -1,6 +1,5 @@
 package br.com.carlosaurelio.anotaai.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +10,7 @@ import android.view.View;
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.UnidadeMedidaAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
+import br.com.carlosaurelio.anotaai.dialog.UnidadeMedidaDialog;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
 import io.realm.RealmResults;
 
@@ -40,9 +40,8 @@ public class UnidadeMedidaActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplication().getApplicationContext(), AddEditUnidadeMedidaActivity.class);
-                intent.putExtra("TYPE_ACTIVITY", 0);
-                startActivity(intent);
+                UnidadeMedidaDialog dialog = new UnidadeMedidaDialog(new UnidadeMedida());
+                dialog.show(getSupportFragmentManager(), "UnidadeMedida");
             }
         });
     }

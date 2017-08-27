@@ -40,9 +40,6 @@
         <activity
             android:name=".activity.UnidadeMedidaActivity"
             android:label="@string/string_unidade_de_medida" />
-        <activity
-            android:name=".activity.AddEditUnidadeMedidaActivity"
-            android:label="@string/string_unidade_de_medida"/>
     </application>
 
 </manifest>

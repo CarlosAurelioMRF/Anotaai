@@ -2,7 +2,7 @@ package br.com.carlosaurelio.anotaai.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import br.com.carlosaurelio.anotaai.R;
-import br.com.carlosaurelio.anotaai.activity.AddEditUnidadeMedidaActivity;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
+import br.com.carlosaurelio.anotaai.dialog.UnidadeMedidaDialog;
 import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
 import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 import io.realm.RealmRecyclerViewAdapter;
@@ -38,12 +38,8 @@ public class UnidadeMedidaAdapter extends RealmRecyclerViewAdapter<UnidadeMedida
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AddEditUnidadeMedidaActivity.class);
-                intent.putExtra("codigoUN", unidadeMedida.getId());
-                intent.putExtra("unidadeMedida", unidadeMedida.getUnidadeMedida());
-                intent.putExtra("descricao", unidadeMedida.getDescricao());
-                intent.putExtra("TYPE_ACTIVITY", 1);
-                context.startActivity(intent);
+                UnidadeMedidaDialog dialog = new UnidadeMedidaDialog(unidadeMedida);
+                dialog.show(((FragmentActivity)context).getSupportFragmentManager(), "UnidadeMedida");
             }
         });
 

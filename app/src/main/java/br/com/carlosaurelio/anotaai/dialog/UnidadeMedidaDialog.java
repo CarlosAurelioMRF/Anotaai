@@ -8,46 +8,45 @@ import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
-import br.com.carlosaurelio.anotaai.model.GrupoProduto;
+import br.com.carlosaurelio.anotaai.model.UnidadeMedida;
 import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 
-public class GrupoDialog extends DialogFragment {
+public class UnidadeMedidaDialog extends DialogFragment {
 
-    private GrupoProduto mGrupoProduto;
-    private Spinner spnTipoGrupo;
-    private EditText edtNomeGrupo;
-    private TextInputLayout lNomeLayout;
+    private UnidadeMedida mUnidadeMedida;
+    private EditText edtUN, edtDescricao;
+    private TextInputLayout lUnidadeMedida, lDescricao;
 
-    public GrupoDialog(GrupoProduto grupoProduto) {
-        this.mGrupoProduto = grupoProduto;
+    public UnidadeMedidaDialog(UnidadeMedida unidadeMedida) {
+        this.mUnidadeMedida = unidadeMedida;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         final View alertLayout = getActivity().getLayoutInflater().
-                inflate(R.layout.dialog_grupo, null);
+                inflate(R.layout.dialog_unidade_medida, null);
 
-        spnTipoGrupo = (Spinner) alertLayout.findViewById(R.id.spnTipoGrupo);
-        edtNomeGrupo = (EditText) alertLayout.findViewById(R.id.edtNomeGrupo);
-        lNomeLayout = (TextInputLayout) alertLayout.findViewById(R.id.lNomeLayout);
+        edtUN = (EditText) alertLayout.findViewById(R.id.edtUN);
+        edtDescricao = (EditText) alertLayout.findViewById(R.id.edtDescricao);
+        lUnidadeMedida = (TextInputLayout) alertLayout.findViewById(R.id.lUnidadeMedida);
+        lDescricao = (TextInputLayout) alertLayout.findViewById(R.id.lDescricao);
 
-        if (mGrupoProduto.getNomeGrupo() != null)
-            edtNomeGrupo.setText(mGrupoProduto.getNomeGrupo());
+        if (mUnidadeMedida.getUnidadeMedida() != null)
+            edtUN.setText(mUnidadeMedida.getUnidadeMedida());
 
-        if (mGrupoProduto.getTipoGrupo() > -1)
-            spnTipoGrupo.setSelection(mGrupoProduto.getTipoGrupo());
+        if (mUnidadeMedida.getDescricao() != null)
+            edtDescricao.setText(mUnidadeMedida.getDescricao());
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-        builder.setTitle(mGrupoProduto.getId() == 0 ?
+        builder.setTitle(mUnidadeMedida.getId() == 0 ?
                 getActivity().getString(R.string.insert) :
                 getActivity().getString(R.string.edit))
                 .setView(alertLayout)
@@ -63,7 +62,7 @@ public class GrupoDialog extends DialogFragment {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                GrupoDialog.this.getDialog().cancel();
+                                UnidadeMedidaDialog.this.getDialog().cancel();
                             }
                         });
 
@@ -74,34 +73,39 @@ public class GrupoDialog extends DialogFragment {
             @Override
             public void onClick(View v) {
                 boolean canCloseDialog = false;
-                String nome = edtNomeGrupo.getText().toString().trim();
-                int tipo = spnTipoGrupo.getSelectedItemPosition();
+                String un = edtUN.getText().toString().trim();
+                String descricao = edtDescricao.getText().toString().trim();
 
                 Calendar calendar = Calendar.getInstance();
                 String dateNow = new SimpleDateFormat("dd/MM/yyyy").format(calendar.getTime());
 
-                if (nome.equals("")) {
-                    lNomeLayout.setErrorEnabled(true);
-                    lNomeLayout.setError("Preencha o campo nome.");
-                    edtNomeGrupo.setError(getString(R.string.required));
-                    edtNomeGrupo.requestFocus();
+                if (un.equals("")) {
+                    lUnidadeMedida.setErrorEnabled(true);
+                    lUnidadeMedida.setError("Preencha o campo unidade medida.");
+                    edtUN.setError(getString(R.string.required));
+                    edtUN.requestFocus();
+                } else if (descricao.equals("")) {
+                    lDescricao.setErrorEnabled(true);
+                    lDescricao.setError("Preencha o campo descrição.");
+                    edtDescricao.setError(getString(R.string.required));
+                    edtDescricao.requestFocus();
                 } else {
                     ProdutoController controller = new ProdutoController(false);
 
                     try {
-                        GrupoProduto grupoProduto = new GrupoProduto(mGrupoProduto.getId(), nome, tipo, dateNow);
+                        UnidadeMedida unidadeMedida = new UnidadeMedida(mUnidadeMedida.getId(), un, descricao, dateNow);
 
-                        if (mGrupoProduto.getId() == 0)
-                            controller.inserirGrupo(grupoProduto);
+                        if (unidadeMedida.getId() == 0)
+                            controller.inserirUnidadeMedida(unidadeMedida);
                         else
-                            controller.atualizarGrupo(grupoProduto);
+                            controller.atualizarUnidadeMedida(unidadeMedida);
 
                         canCloseDialog = true;
 
-                        new MsgFunctions().toastSave(getActivity(), nome);
+                        new MsgFunctions().toastSave(getActivity(), unidadeMedida.getUnidadeMedida());
                     } catch (Exception e) {
                         new MsgFunctions().errorMessage(getActivity(),
-                                getString(R.string.string_grupos),
+                                getString(R.string.string_unidade_de_medida),
                                 getString(R.string.error_save));
                         e.printStackTrace();
                     }
