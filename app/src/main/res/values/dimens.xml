@@ -10,4 +10,7 @@
     <dimen name="profile_width">75dp</dimen>
     <dimen name="profile_height">75dp</dimen>
     <dimen name="card_margin">5dp</dimen>
+
+    <dimen name="input_label_vertical_spacing">8dp</dimen>
+    <dimen name="input_label_horizontal_spacing">4dp</dimen>
 </resources>

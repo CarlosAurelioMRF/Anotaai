@@ -3,13 +3,14 @@ package br.com.carlosaurelio.anotaai.other;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
 import android.widget.Toast;
 
 import br.com.carlosaurelio.anotaai.R;
 
 public class MsgFunctions {
 
-    public void errorMessage(Context context, String title, String message) {
+    public static void errorMessage(Context context, String title, String message) {
         new AlertDialog.Builder(context)
                 .setPositiveButton("OK", null)
                 .setTitle(title)
@@ -33,11 +34,11 @@ public class MsgFunctions {
                 }).create().show();
     }
 
-    public void toastSave(Context context, String message) {
+    public static void toastSave(Context context, String message) {
         Toast.makeText(context, message + " " + context.getString(R.string.success_save), Toast.LENGTH_LONG).show();
     }
 
-    public void toastDelete(Context context, String message) {
+    public static void toastDelete(Context context, String message) {
         Toast.makeText(context, message + " " + context.getString(R.string.success_delete), Toast.LENGTH_LONG).show();
     }
 }

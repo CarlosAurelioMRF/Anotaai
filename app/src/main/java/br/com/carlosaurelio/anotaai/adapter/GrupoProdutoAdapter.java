@@ -2,7 +2,7 @@ package br.com.carlosaurelio.anotaai.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import br.com.carlosaurelio.anotaai.R;
-import br.com.carlosaurelio.anotaai.activity.AddEditGrupoActivity;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
+import br.com.carlosaurelio.anotaai.dialog.GrupoDialog;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
 import br.com.carlosaurelio.anotaai.other.MsgFunctions;
 import io.realm.RealmRecyclerViewAdapter;
@@ -39,31 +39,16 @@ public class GrupoProdutoAdapter extends RealmRecyclerViewAdapter<GrupoProduto, 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AddEditGrupoActivity.class);
-                intent.putExtra("codigoGrupo", grupoProduto.getId());
-                intent.putExtra("nomeGrupo", grupoProduto.getNomeGrupo());
-                intent.putExtra("tipoGrupo", grupoProduto.getTipoGrupo());
-                intent.putExtra("TYPE_ACTIVITY", 1);
-                context.startActivity(intent);
+                GrupoDialog dialog = new GrupoDialog(grupoProduto);
+                dialog.show(((FragmentActivity)context).getSupportFragmentManager(), "Grupo");
             }
         });
 
         holder.txtIdGrupo.setText("#" + grupoProduto.getId());
         holder.txtNomeGrupo.setText(grupoProduto.getNomeGrupo());
 
-        String nomeTipo;
-
-        if (context.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgAlimentos")) {
-            nomeTipo = "Alimentos";
-        } else if (context.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgAlcoolicos")) {
-            nomeTipo = "Alcoólicos";
-        } else if (context.getResources().getResourceEntryName(grupoProduto.getTipoGrupo()).equals("rdgNaoAlcoolicos")) {
-            nomeTipo = "Não Alcoólicos";
-        } else {
-            nomeTipo = "Outros";
-        }
-
-        holder.txtTipo.setText(nomeTipo);
+        String[] tipoGrupo = context.getResources().getStringArray(R.array.tipo_grupo);
+        holder.txtTipo.setText(tipoGrupo[grupoProduto.getTipoGrupo()]);
 
         holder.btnDeletar.setOnClickListener(new View.OnClickListener() {
             @Override

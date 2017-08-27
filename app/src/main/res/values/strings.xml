@@ -28,6 +28,13 @@
         <item>Configurações</item>
     </string-array>
 
+    <string-array name="tipo_grupo">
+        <item>Alimentos</item>
+        <item>Alcoólicos</item>
+        <item>Não Alcoólicos</item>
+        <item>Outros</item>
+    </string-array>
+
     <string name="activity_title_privacy_policy">Política de Privacidade</string>
     <string name="action_clear_all">Limpar</string>
     <string name="action_logout">Sair</string>
@@ -42,10 +49,6 @@
     <string name="string_administrador">Administrador</string>
     <string name="strnig_caixa">Caixa</string>
     <string name="string_garcom">Garçom</string>
-    <string name="string_alimentos">Alimentos</string>
-    <string name="string_alcoolicos">Alcoólicos</string>
-    <string name="string_nao_alcoolicos">Não Alcoólicos</string>
-    <string name="string_outros">Outros</string>
 
     <string name="string_unidade_de_medida">Unidade de Medida</string>
     <string name="string_descricao">Descrição</string>
@@ -62,6 +65,7 @@
     <string name="dont_save_data">Alterações não foram salvas deseja sair assim mesmo?</string>
     <string name="positive_message">Sim</string>
     <string name="negative_message">Não</string>
+    <string name="cancel_message">Cancelar</string>
     <string name="required">Obrigatório</string>
     <string name="insert">Inserir</string>
     <string name="edit">Editar</string>

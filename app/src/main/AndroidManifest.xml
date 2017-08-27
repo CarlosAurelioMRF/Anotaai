@@ -38,9 +38,6 @@
             android:name=".activity.GrupoActivity"
             android:label="@string/string_grupos"/>
         <activity
-            android:name=".activity.AddEditGrupoActivity"
-            android:label="@string/string_grupos"/>
-        <activity
             android:name=".activity.UnidadeMedidaActivity"
             android:label="@string/string_unidade_de_medida" />
         <activity

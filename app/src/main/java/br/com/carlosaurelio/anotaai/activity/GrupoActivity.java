@@ -1,6 +1,5 @@
 package br.com.carlosaurelio.anotaai.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -8,9 +7,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
 import android.view.View;
+
 import br.com.carlosaurelio.anotaai.R;
 import br.com.carlosaurelio.anotaai.adapter.GrupoProdutoAdapter;
 import br.com.carlosaurelio.anotaai.controller.ProdutoController;
+import br.com.carlosaurelio.anotaai.dialog.GrupoDialog;
 import br.com.carlosaurelio.anotaai.model.GrupoProduto;
 import io.realm.RealmResults;
 
@@ -40,9 +41,8 @@ public class GrupoActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplication().getApplicationContext(), AddEditGrupoActivity.class);
-                intent.putExtra("TYPE_ACTIVITY", 0);
-                startActivity(intent);
+                GrupoDialog dialog = new GrupoDialog(new GrupoProduto());
+                dialog.show(getSupportFragmentManager(), "Grupo");
             }
         });
     }
